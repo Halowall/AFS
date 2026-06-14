@@ -1,422 +1,764 @@
 # Automaten und Formale Sprachen — 知识点总结 / Wissensbasis
 
 > **格式说明 / Hinweis zum Format:**
-> 每个知识点先写德语（**fett**），下方缩进写中文解释。
-> Jeder Wissenspunkt: zuerst Deutsch (**fett**), darunter eingerückt Chinesisch.
+> 每个知识点先写**德语原文**（来自Vorlesung），下方缩进写**中文解释**。
+> Jeder Wissenspunkt: zuerst **Deutsch** (aus der Vorlesung), darunter eingerueckt **Chinesisch**.
+> 本总结覆盖 VorlesungAFS2.pdf 全部 256 页 + UebungsaufgabenAFS.pdf 练习题知识点。
 
 ---
 
 ## 1. 理论计算机科学四大领域 / Vier Teilgebiete der Informatik
 
 **Technische Informatik**
-  技术信息学：研究计算机内部结构和硬件制造。
-  Befasst sich mit der inneren Struktur und dem Bau von Computern.
+  Befasst sich mit der inneren Struktur und dem Bau von Computern und allen damit zusammenhaengenden technischen Fragen.
+  技术信息学：研究计算机内部结构、硬件制造及所有相关技术问题。
 
 **Praktische Informatik**
-  实用信息学：编程原理和技术。
   Umfasst die Prinzipien und Techniken der Programmierung.
+  实用信息学：涵盖编程的原理和技术。
 
 **Angewandte Informatik**
-  应用信息学：信息学方法与应用问题之间的桥梁。
-  Bildet die Brücke zwischen Informatik-Methoden und Anwendungsproblemen.
+  Bildet die Bruecke zwischen den Methoden der Informatik und Anwendungsproblemen.
+  应用信息学：在信息学方法与应用问题之间架起桥梁。
 
 **Theoretische Informatik**
-  理论信息学：开发计算机的数学模型及其精确描述工具。基础是数学（逻辑和集合论）。核心工具是图灵机。
-  Entwickelt mathematische Modelle von Computern. Basis: Mathematik (Logik, Mengenlehre). Kerninstrument: Turingmaschine (TM).
+  Entwickelt mathematische Modelle von Computern und Hilfsmittel zu ihrer praezisen Beschreibung.
+  Ihre Basis ist die Mathematik — insbesondere Logik und Mengenlehre.
+  Ein wesentliches Instrument ist die Turingmaschine (TM), die bereits 1936 von Alan Turing eingefuehrt wurde.
+  理论信息学：开发计算机的数学模型及其精确描述工具。基础是数学（逻辑和集合论）。
+  核心工具是图灵机（TM），1936年由图灵提出——远早于"信息学"这门学科的出现。
 
 ---
 
 ## 2. 字母表 / Alphabet
 
-**Definition: Ein Alphabet A = {a₁, …, aₙ} ist eine nichtleere, endliche Menge von Zeichen (Symbolen).**
-  定义：字母表 A 是一个非空的、有限的字符（符号）集合。
-  - 例：A = {a, b}、A = {0, 1} ✓
-  - N（自然数集）不是字母表（无限集）✗
-  - ∅ = {} 不是字母表（空集）✗
-  - 单元素集 {a} 是字母表 ✓
-
-**Achtung: Es gibt verschiedene Definitionen (z. B. Tupel vs. Menge).**
-  注意：不同文献对字母表的定义有差异。
+**Definition: Ein Alphabet A = {a1, ..., an} ist eine nichtleere Menge von endlich vielen Zeichen (auch Symbole genannt).**
+  字母表是一个非空、有限的字符（符号）集合。
+  ✓ {b,c,d,e,f}, {0,1,...,9}, {☼,♡,$}, {a}
+  ✗ N (无限), ∅ = {} (空集不是字母表)
+  Achtung: Es gibt verschiedene Definitionen (Stichworte: Tupel, Ordnung).
 
 ---
 
 ## 3. 词 / Wort
 
-**Definition: Ein Wort x = x₁…xₙ ist eine Folge von n Zeichen (Länge n ∈ ℕ).**
-  定义：词是由 n 个字符组成的序列（长度为 n）。
+**Definition: Eine Folge x = x1...xn von n Zeichen heisst Wort (der Laenge n in N).**
+  词：由 n 个字符组成的序列，长度为 n。
 
-**Leeres Wort λ (auch ε): Spezialfall mit Länge 0. Kann über jedem Alphabet gebildet werden.**
-  空词 λ（也写作 ε）：长度为 0 的特殊情况。可以在任何字母表上构成。
-  - |λ| = 0
-  - λ ≠ ⋆（⋆ 是带上的空白符号，λ 是词）
+**Das leere Wort λ (auch ε): Spezialfall mit Laenge 0. Kann ueber jedem Alphabet gebildet werden.**
+  空词 λ（也写作 ε）：|λ| = 0。可在任何字母表上构成。
+  λ != ⋆ — ⋆ 是带上的空白符号（Blanksymbol），λ 是词，两者完全不同。
 
-**Aⁿ = {x₁…xₙ | xᵢ ∈ A}，其中 A⁰ = {λ}**
-  A 的 n 次幂：所有由 A 中符号组成的长度为 n 的词的集合。0 次幂 = {λ}。
+**A^n = {x1...xn | xi in A fuer i = 1,...,n}, dabei gilt A^0 = {λ}.**
+  A^0 = {λ}（唯一的零长度词）。A^1 = A 本身。A^2 = 所有两字符组合。
+
+**Die Menge aller Woerter ueber A ist A* = Vereinigung ueber n>=0 von A^n (Kleene'sche Huelle / Sternhuelle).**
 
 ---
 
-## 4. 克莱尼星号 / Kleene'sche Hülle (Sternhülle)
+## 4. 克莱尼星号与正闭包 / Sternhuelle und positive Huelle
 
-**A* = ⋃ₙ≥₀ Aⁿ —— 所有由 A 中符号组成的词的集合（包括 λ）**
-  A 的星号闭包 = 所有可能长度的词的并集。包含空词。
+**A* = {λ, a, b, aa, ab, ba, bb, aaa, ...} (Beispiel A = {a,b})**
+  Sternhuelle = 所有可能长度（含0）的词。
+  **A+ = A* ohne {λ}** — positive Huelle（不含空词）。
+  例: B={0,1}: B*={λ,0,1,00,01,10,11,...}, B+={0,1,00,01,...}
 
-**Beispiel: A = {a, b}**
-  - A⁰ = {λ}
-  - A¹ = {a, b}
-  - A² = {aa, ab, ba, bb}
-  - A³ = {aaa, aab, aba, abb, baa, bab, bba, bbb}
-  - A* = {λ, a, b, aa, ab, ba, bb, aaa, …}
+**λ, {λ}, ∅ 三者的区别:**
+  λ: das leere Wort (ein Wort)
+  {λ}: die Sprache, die nur das leere Wort enthaelt (eine Sprache mit einem Wort)
+  ∅: die leere Sprache (eine Sprache ohne Woerter)
 
 ---
 
 ## 5. 形式语言 / Formale Sprache
 
-**Definition: Jede Teilmenge L ⊆ A* heißt Sprache über dem Alphabet A.**
-  定义：A* 的任意子集都是 A 上的一个形式语言。
-  - L = {λ, a, bb, aab} 是 {a, b} 上的语言 ✓
-  - ∅（空集）是语言 ✓
-  - 包含不属于 A 的符号的集合不是该字母表上的语言 ✗
+**Definition: Jede Teilmenge L ⊆ A* heisst Sprache ueber dem Alphabet A.**
+  A* 的任意子集都是 A 上的一个形式语言。∅（空集）也是语言 ✓。
+  包含不属于 A 的符号的集合不是该字母表上的语言 ✗。
+
+**Sprachen sind Mengen von Woertern. Entscheidungsproblem → Sprache, Berechnungsproblem → Funktion.**
 
 ---
 
 ## 6. 两种问题类型 / Zwei Problemarten
 
 **Entscheidungsproblem（判定问题）**
-  Ausgabe: nur Ja oder Nein（输出：只有是/否）
-  - 例：这个数是质数吗？这个词属于某个语言吗？
-  - 用语言 L 描述：w ∈ L 或 w ∉ L
+  Die Ausgabe besteht nur aus zwei Moeglichkeiten: Ja oder Nein.
+  → Beschreibung durch eine Sprache L: w in L oder w nicht in L.
+  例: Ist eine Zahl prim? Enthaelt ein Wort mehr a als b? Gehoert ein Wort zu einer gegebenen Sprache?
 
 **Berechnungsproblem（计算问题）**
-  Ausgabe: konkretes Wort / Zahl / Struktur（输出：具体的词/数/结构）
-  - 例：计算最大公约数、质因数分解、求词的长度
-  - 用函数 f 描述：w ↦ f(w)
+  Die Ausgabe ist ein konkretes Wort, eine Zahl oder eine andere kodierte Struktur.
+  → Beschreibung durch eine Funktion f: w ↦ f(w).
+  例: ggT berechnen, Primfaktorzerlegung, Wortlaenge ausgeben.
 
-**两者可以互相转换 / Beide sind ineinander überführbar:**
-  - 判定 → 计算：f(w) = 1 (Ja) 或 0 (Nein)
-  - 计算 → 判定：问 f(w) = u? 或第 i 个字符是什么？
-  - 函数的图 Gf = {(w, u) | u = f(w)} 将计算转为判定
+**两者互转:**
+  判定→计算: f(w) = 1 (falls w in L), 0 (sonst)
+  计算→判定: 通过图 Gf = {(w,u) | u = f(w)} → 问 (w,u) in Gf?
+  Beide Sichtweisen sind eng verwandt.
 
 ---
 
 ## 7. 确定型图灵机 / Deterministische Turingmaschine (DTM)
 
-**Definition: T = (E, B, S, δ, s₀)**
-  五元组定义：
+**T = (E, B, S, δ, s0)**
 
-| 符号 | 德语 | 中文 | 含义 |
-|------|------|------|------|
-| **E** | Eingabealphabet | 输入字母表 | 输入可以包含的所有字符（不含 ⋆） |
-| **B** | Bandalphabet | 带字母表 | 带上可以出现的所有字符（含 E 和 ⋆） |
-| **S** | Zustandsmenge | 状态集 | 有限状态集合 |
-| **δ** | Zustandsübergangsfunktion | 状态转移函数 | δ: S × B → S × B × {R, L, N}（部分函数） |
-| **s₀** | Startzustand | 起始状态 | s₀ ∈ S |
+| 符号 | 含义 / Bedeutung |
+|------|-----------------|
+| **E** | Eingabealphabet — 输入可以含的所有字符（不含 ⋆） |
+| **B** | Bandalphabet — 带上可出现的所有字符（含 E 和 ⋆；可含额外字符） |
+| **S** | Endliche Zustandsmenge — 有限状态集 (mit s0 in S) |
+| **δ** | δ: S × B → S × B × {R, L, N} — **partielle** Zustandsuebergangsfunktion（部分函数） |
+| **s0** | Startzustand — 起始状态 |
 
-**δ(s, b) = (s', b', R) 的含义：**
-  在状态 s，读到带上的符号 b 时：
-  - 将 b 改写为 b'
-  - 切换到状态 s'
-  - 读写头向右移动一格（R = rechts）
-  - 也可选 L（links，向左）或 N（neutral，不动）
-  - 若 δ 对 (s, b) 无定义，则 TM 停机
+**δ(s, b) = (s', b', R) 的含义 / Bedeutung:**
+  Wenn sich die TM im Zustand s befindet und der Lese-/Schreibkopf das Zeichen b auf dem Band liest:
+  - b wird durch b' **ueberschrieben** (改写)
+  - Folgezustand ist s' (切换状态)
+  - Lese-/Schreibkopf bewegt sich eine Zelle nach **rechts** (R), **links** (L) oder **neutral** (N)
+  - Ist δ fuer ein Paar (s,b) **nicht definiert**, haelt T an (停机)
 
-**Turingtafel（图灵表）：**
-  行 = 状态 s ∈ S，列 = 带符号 b ∈ B
-  单元格 [s, b] = δ(s, b) 的转移指令
+**Turingtafel / Zustandsuebergangstabelle:**
+  行 = 所有状态 s in S，列 = 所有可能的带符号 b in B
+  格 [s,b] 定义 δ(s,b) 的转移指令
 
-**初始状态 / Start:**
-  带上写有输入 w ∈ E*，读写头在 w 的第一个字符上。
-  若 w = λ，读写头在 ⋆ 上。
+**初始配置 / Start:**
+  Band enthaelt Eingabe w in E*, Lese-/Schreibkopf auf erstem Zeichen von w.
+  Falls w=λ, steht Kopf auf ⋆.
+  图示: ...⋆⋆ e1 e2 ... en ⋆...
 
 ---
 
-## 8. 图灵机作为接受器 / Akzeptor-Turingmaschine
+## 8. 接受器图灵机 / Akzeptor-Turingmaschine
 
-**Definition: T = (E, B, S, δ, s₀, F)**
-  比基本 TM 多了 F：
-  - **F ⊆ S** = 接受终止状态集（akzeptierende Endzustände）
-  - 在 F 中停机 = 接受（akzeptiert）
-  - 在 S \ F 中停机 = 拒绝（verworfen）
-  - 不停机 = 也视为不接受
+**T = (E, B, S, δ, s0, F) mit F ⊆ S — akzeptierende Endzustaende**
+  比基本 TM 多一个接受状态集 F：
+  - Haelt in F → **akzeptiert** (接受)
+  - Haelt in S\F → **verworfen** (拒绝)
+  - Haelt gar nicht → auch nicht akzeptiert (也不接受)
 
-**Akzeptierte Sprache L(T) = {w ∈ E* | T akzeptiert w}**
-  T 接受的語言 = 所有被 T 接受的词的集合。
+**Akzeptierte Sprache: L(T) = {w in E* | T akzeptiert w}**
 
-**重要区别 / Wichtiger Unterschied:**
-  - **Akzeptieren（接受）** ≠ **Entscheiden（判定）**
-  - 判定要求对每种输入都停机（要么接受、要么拒绝）
-  - 接受器可能在非接受的输入上永远运行
+| T 的行为 / Verhalten von T auf w | L(T) 含义 | fT(w) |
+|----------------------------------|----------|-------|
+| T akzeptiert w | w in L(T) | 1 |
+| T verwirft w | w nicht in L(T) | 0 |
+| T haelt nicht | w nicht in L(T) | undefiniert |
 
-| T 的行为 | L(T) 中的含义 | fT(w) |
-|----------|--------------|-------|
-| 接受 w | w ∈ L(T) | 1 |
-| 拒绝 w | w ∉ L(T) | 0 |
-| 不停机 | w ∉ L(T) | 未定义 |
+**Wichtig: Akzeptieren != Entscheiden!**
+  Eine Akzeptor-TM muss bei nicht akzeptierten Eingaben **nicht unbedingt halten**.
+  Entscheiden wuerde zusaetzlich bedeuten: T haelt **fuer jede** Eingabe.
+
+**数字集 → 形式语言需要选择编码:**
+  P = {n in N | n prim} 还不是形式语言（元素是数字）。
+  需选编码：如单码 (einstellige Darstellung) 用 Alphabet {a}:
+  Zahl n → a^n, 则 LP = {a^n | n prim} = {aa, aaa, aaaaa, aaaaaaa, ...}
 
 ---
 
 ## 9. 格局 / Konfiguration
 
-**Definition: (v, s, w) ∈ B* × S × B***
-  三元组描述 TM 的完整快照：
-  - **s** = 当前状态
-  - **v** = 读写头左侧的带内容
-  - **w** = 从读写头位置开始向右的带内容
-  - 整条带的内容 = vw
+**Definition: (v, s, w) in B* × S × B* — ein Tripel**
+  - **s**: aktueller Zustand (当前状态)
+  - **v**: der Teil **links** vom Lese-/Schreibkopf (读写头左侧内容)
+  - **w**: der Teil **ab dem Lese-/Schreibkopf** nach rechts (读写头位置起向右)
+  - 整条带 = **vw** (die aktuelle Bandinschrift)
 
-**Startkonfiguration / 初始格局:**
-  - 输入 w ≠ λ：(λ, s₀, w)
-  - 输入 w = λ：(λ, s₀, ⋆)
+**Startkonfiguration:**
+  - w != λ: (λ, s0, w)
+  - w = λ: (λ, s0, ⋆)
 
-**Übergangsrelation ⊢（转移关系）:**
-  描述格局之间的一步转移。
-  例：(λ, s₀, 00110) ⊢ (0, s₀, 0110) ⊢ (00, s₀, 110) ⊢ …
-  读写头逐步向右移动，状态可能改变。
+**Veranschaulichung / 图示:**
+  ...⋆ 0 0 1 1 0 ⋆...
+      ↑ s (Kopf auf der ersten 1)
+      v = "00", w = "110"
+  ⇒ Konfiguration = (00, s, 110)
+
+**Konfigurationen kodieren die Position des Kopfes implizit — man braucht sie nicht als Zahl zu speichern.**
 
 ---
 
-## 10. 线性有界自动机 / Linear beschränkter Automat (LBA)
+## 10. 格局转移关系 / Uebergangsrelation |-
 
-**为什么需要 LBA / Warum LBA?**
-  TM 有无限长的带 → 现实中不存在。LBA 限制了可用空间。
+**|-T Teilmenge von (B* × S × B*) × (B* × S × B*)**
+  Fuer δ(s,b) = (s', b', X) mit X in {L,R,N}:
 
-**原理 / Prinzip:**
-  → s₀ ←
-  $L e₁ e₂ … eₙ ⋆ … ⋆ $R
+  **X = N** (Neutral / 不动):
+  (v, s, bw) |-T (v, s', b'w)
+
+  **X = R** (Rechts / 右移):
+  (v, s, bw) |-T (vb', s', w) falls w != λ
+  (v, s, bw) |-T (vb', s', ⋆) falls w = λ
+  (Dabei: vb'=λ, falls v=λ und b'=⋆)
+
+  **X = L** (Links / 左移):
+  四种子情况:
+  - v=v'a, b'w!=⋆ → (v', s', ab'w)
+  - v=v'a, b'w=⋆ → (v', s', a)
+  - v=λ, b'w!=⋆ → (λ, s', ⋆b'w)
+  - v=λ, b'w=⋆ → (λ, s', ⋆)
+
+---
+
+## 11. 线性有界自动机 / Linear beschraenkter Automat (LBA)
+
+**Motivation:**
+  TMs haben ein unendlich langes Band — keine reale Maschine hat das.
+  → linear beschraenkte Turingmaschinen (auch LBAs genannt).
+
+**Prinzip / 原理:**
+  → s0 ←
+  $L e1 e2 ... en ⋆ ... ⋆ $R
+  |w|=n       n        c
+
   读写头只能在 $L 和 $R 之间移动。
-
-**空间限制 / Platzschranke:**
-  最多可用 **k · |w| + c** 个带格子
-  - k, c 是固定的自然数（不依赖具体输入）
-  - |w| = 输入长度
-  - 例：w = baum, |w|=4, k=2, c=3 → 最多 2×4+3 = 11 格
-
-**LBA 的优点:**
-  - 比 TM 更贴近实际计算机
-  - 仍然足够强大解决很多问题
+  有固定的自然数 **k** 和 **c**（不依赖具体输入 w）。
+  最多可用 **k·|w| + c** 个带格子。
+  例: w=baum, |w|=4, k=2, c=3 → 2·4+3=11 格
+  w'=baumhaus, |w'|=8 → 2·8+3=19 格 (k,c 不变)
 
 ---
 
-## 11. 下推自动机 / Kellerautomat (KA)
+## 12. 下推自动机 / Kellerautomat (KA) — 定义
 
-**直观理解 / Intuition:**
-  需要一个自动机，不仅有状态，还能在读入过程中「记住」信息。
-  例如：读入 r 时存一层，读入 g 时消一层 → 这就是栈（Keller/Stack）。
+**Motivation / 动机 (Einlass-Auslass-Protokoll):**
+  r = eine Person kommt rein (进), g = eine Person geht raus (出).
+  读 rrg → 还有一人里面。读 rrrrgg → 还有两人里面。
+  Die Anzahl ist bei jedem Wort endlich, aber es gibt **keine feste obere Schranke** fuer alle Woerter.
+  → 需要 Automat mit zusaetzlichem Speicher (额外存储)。这就是 Keller / Stack。
 
-**原理：LIFO (Last-In-First-Out) / 后进先出**
-  最后放进去的东西最先被取出。
-  例：一摞盘子、浏览器的后退按钮、函数调用栈。
+**LIFO-Prinzip / 后进先出:**
+  Last-In-First-Out = FILO (First-In-Last-Out).
+  最后放入的最先被取出。例: 一摞盘子、浏览器后退按钮、函数调用栈。
 
-**FILO (First-In-Last-Out) = LIFO**：同一个原理，只是叫法不同。
+**Definition: A = (E, K, S, δ, s0, F)**
 
-**Definition: A = (E, K, S, δ, s₀, F)**
+| 符号 | Bedeutung / 含义 |
+|------|-----------------|
+| **E** | Eingabealphabet — 输入字母表（不含 k0） |
+| **K** | Kelleralphabet — 栈字母表。含 **k0** (Kellerbodensymbol 栈底标记) |
+| **S** | Endliche Zustandsmenge — 有限状态集 (s0 in S) |
+| **δ** | δ: S × (E∪{λ}) × K → S × K* — partielle Zustandsuebergangsfunktion |
+| **s0** | Startzustand — 起始状态 |
+| **F** | F ⊆ S — akzeptierende Endzustaende (接受状态集) |
 
-| 符号 | 德语 | 中文 |
-|------|------|------|
-| **E** | Eingabealphabet | 输入字母表 |
-| **K** | Kelleralphabet | 栈字母表（含 k₀ = 栈底标记） |
-| **S** | Zustandsmenge | 有限状态集 |
-| **δ** | Zustandsübergangsfunktion | 转移函数 |
-| **s₀** | Startzustand | 起始状态 |
-| **F** | akzeptierende Endzustände | 接受状态集 |
+**δ(s, e, k) = (s', v) — Variante 1 (读输入):**
+  Zustand s, liest e auf Eingabeband, oberstes Kellerzeichen k →
+  k wird durch das ganze Wort v in K* ersetzt (von hinten nach vorne auf den Keller gepackt).
+  Folgezustand s', Kopf auf Eingabeband wandert einen Schritt nach rechts.
 
-**转移函数 δ: S × (E ∪ {λ}) × K → S × K***
-  δ(s, e, k) = (s', v) 的含义：
-  - 当前状态 s
-  - 读入字符 e ∈ E（或 λ）
-  - 栈顶符号 k
-  - → 新状态 s'，栈顶 k 被替换为 v ∈ K*（一个词）
+**δ(s, λ, k) = (s', v) — Variante 2 (λ-Uebergang):**
+  Dasselbe, aber das aktuell gelesene Eingabezeichen wird **nicht beachtet**,
+  der Lesekopf auf dem Eingabeband bewegt sich **nicht** weiter.
+  Bei deterministischen KA: δ(s,λ,k) nur definierbar, wenn δ(s,e,k) **nicht** definiert wurde.
 
-**两种转移类型 / Zwei Varianten:**
-  1. δ(s, e, k) = (s', v)：读一个输入符号 e，栈顶 k → v
-  2. δ(s, λ, k) = (s', v)：**λ-Übergang**，不读输入，只操作栈
+---
 
-**λ-Übergang 的优势：**
-  允许自动机在不消耗输入的情况下改变状态或栈内容。
-  例如：发现栈底标记 k₀ 时，自动进入接受状态。
+## 13. 下推自动机 — 操作、格局、转移关系
 
-**栈操作 / Kelleroperationen:**
-  - δ(s, a, k₀) = (s, Ak₀)：读 a，将 A 压入栈（A 在 k₀ 上方）
-  - δ(s, a, A) = (s, AA)：读 a，再压一个 A
-  - δ(s, b, A) = (s, λ)：读 b，弹出 A（栈顶 A 被移除）
-  - δ(s, λ, k₀) = (se, k₀)：不读输入，看到栈底就进入接受状态
-
-**典型应用 / Typisches Beispiel:**
-  语言 aⁿbⁿ（n 个 a 后跟 n 个 b）：
-  - 读每个 a → 向栈中压入 A
-  - 读每个 b → 从栈中弹出一个 A
-  - 读完且栈空（只剩 k₀）→ 接受
-  - 这不能用有限状态自动机实现，必须用栈！
+**KA 的图示 / Graphische Darstellung:**
+  Eingabeband e1 e2 ... en
+  s0 → (Lesen, 只读)
+  Steuereinheit ←→ Keller (栈) / LIFO / Lesen+Schreiben
+  栈底: k0
 
 **KA 的格局 / Konfiguration eines KA:**
-  (s, Restwort, Kellerinhalt)
-  例：(s₀, abba, k₀) ⊢ (s₁, bba, Ak₀) ⊢ …
+  **(s, w, v) in S × E* × K***
+  - s: aktueller Zustand
+  - w: noch nicht gelesener Teil der Eingabe (剩余输入)
+  - v: aktueller Kellerinhalt (当前栈内容)
+  - Startkonfiguration: **(s0, w, k0)**
 
-**转移关系 ⊢KA** 是 (S × E* × K*) × (S × E* × K*) 的子集。
+**KA 的转移关系 / Uebergangsrelation |-A:**
+  |-A Teilmenge von (S×E*×K*) × (S×E*×K*)
 
----
+  Fuer δ(s,e,k) = (s',v'), e in E:
+  (s, ew, kv) |-A (s', w, v'v)
 
-## 12. 有限自动机 / Endlicher Automat (EA)
+  Fuer δ(s,λ,k) = (s',v'), λ-Uebergang:
+  (s, w, kv) |-A (s', w, v'v)
 
-**Definition: EA = (E, S, δ, s₀, F)**
+**栈操作实例 / Kelleroperationen:**
+  - δ(s0, a, k0) = (s0, Ak0) — 读 a, 压 A（A 在 k0 上方）
+  - δ(s0, a, A) = (s0, AA) — 读 a, 再压 A
+  - δ(s0, b, A) = (s1, λ) — 读 b, 弹 A（栈顶 A 被移除 → λ 表示删除）
+  - δ(s1, λ, k0) = (se, k0) — λ-Uebergang: 看到栈底就进入接受状态
 
-| 符号 | 含义 |
-|------|------|
-| E | 输入字母表 |
-| S | 有限状态集 |
-| δ | 转移函数 δ: S × E → S |
-| s₀ | 起始状态 |
-| F ⊆ S | 接受状态集 |
+**Akzeptanz / 接受:**
+  Automat haelt nach endlich vielen Schritten, nachdem die Eingabe **vollstaendig gelesen** wurde,
+  und befindet sich beim Halten in einem Zustand aus F.
+  Der Keller muss dabei **nicht** bis auf k0 geleert sein.
+  Ende der Eingabe beendet den Lauf **nicht automatisch**!
 
-**工作原理:**
-  - 从头到尾读输入词
-  - 每次读一个字符，根据 δ 切换状态
-  - 读完整个词后：若当前状态 ∈ F → 接受；否则拒绝
-
-**接受的定义 / Akzeptieren eines Wortes w = x₁…xₙ:**
-  存在状态序列 s₀, s₁, …, sₙ 满足 sᵢ = δ(sᵢ₋₁, xᵢ)，且 sₙ ∈ F。
-
-**图形表示 / Graphische Darstellung:**
-  - 圆圈 = 状态
-  - 箭头 = 转移（标有输入字符）
-  - 双圈 = 接受状态
-  - 进入箭头 = 起始状态
-
-**接受状态数量 / Anzahl akzeptierender Zustände:**
-  可以有多个接受状态（≥ 0）。
-
-**EA 实例 / Beispiel:**
-  接受所有偶数值的二进制数（以 0 结尾）：
-  - s₀: 读到 1 → s₁，读到 0 → s₀
-  - s₁: 读到 1 → s₀，读到 0 → s₁
-  - F = {s₀}
+**Anwendung / 应用:** Klammerpruefung, a^n b^n, LaTeX-Syntax.
 
 ---
 
-## 13. 非确定型有限自动机 / Nichtdeterministischer EA (NEA)
+## 14. 确定型有限自动机 / Deterministischer Endlicher Automat (DEA)
 
-**与 DEA 的区别:**
-  - δ: S × E → P(S)（映射到状态的幂集，即状态集合）
-  - 同一输入下可以有多个可能的下一状态
-  - 只要存在一条路径通向接受状态，就接受
+**Definition: A = (E, S, δ, s0, F)**
 
-**DEA 和 NEA 等价:** 每个 NEA 都可以转化为等价的 DEA（幂集构造法）。
+| 符号 | Bedeutung |
+|------|-----------|
+| **E** | Eingabealphabet — 输入字母表 |
+| **S** | Endliche Zustandsmenge — 有限状态集 (s0 in S) |
+| **δ** | δ: S×E → S — Zustandsuebergangsfunktion (**totale Funktion!** 所有(s,e)必须定义) |
+| **s0** | Startzustand |
+| **F** | F ⊆ S — akzeptierende Endzustaende |
+
+**Graphische Darstellung / 图形表示:**
+  - Kreis = Zustand (圆圈 = 状态)
+  - Pfeil mit Symbol = Uebergang (箭头+字符 = 转移)
+  - Doppelkreis = Endzustand (双圈 = 接受状态)
+  - Eingehender Pfeil = Startzustand (进入箭头 = 起始)
+
+**工作原理 / Funktionsweise:**
+  e1 e2 ... en  (Eingabeband)
+  s0 → (Lesekopf springt schrittweise nach rechts)
+  读完整个词后：若当前状态 in F → 接受；否则拒绝。
+
+**接受的形式化定义:**
+  Fuer w = a1...an: δ(...δ(δ(s0,a1),a2)...,an) in F
+
+**Kugelschreiber-Beispiel / 圆珠笔模型:**
+  E = {n, d} (n=nichts tun, d=druecken)
+  Zustaende: 0 = Miene drinnen, 1 = Miene draussen
+  0 --d--> 1 --d--> 0 (druecken wechselt)
+  0 --n--> 0, 1 --n--> 1 (nichts tun bleibt)
+
+**λ-Uebergaenge bei DEA:**
+  δ(s,λ) = s' — wird aus s nur in s' gewechselt, ohne Lesekopfbewegung.
+  δ(s,λ) nur definierbar, wenn δ(s,e) nicht definiert wurde.
 
 ---
 
-## 14. Moore 与 Mealy 自动机
+## 15. DEA 实例与语言分析 / DEA Beispiel
 
-**Moore-Automat:**
-  输出只依赖于当前状态。
-  每个状态绑定一个输出值。
-  例：在读到序列 011 时输出 1，其他输出 0。
+**Beispiel: A mit E={a,b}, S={z0,z1,z2,z3}, F={z3}**
+
+  δ(z0,a)=z1, δ(z0,b)=z3
+  δ(z1,a)=z2, δ(z1,b)=z0
+  δ(z2,a)=z3, δ(z2,b)=z1
+  δ(z3,a)=z0, δ(z3,b)=z2
+
+  **Welche Sprache akzeptiert A?**
+  定义 D = #a − #b (a的数量减b的数量)
+  z3 对应 D≡3 (mod 4)
+  Also: L(A) = {w | D ≡ 3 (mod 4)} = {..., −9, −5, −1, 3, 7, ...}
+  x ≡ y (mod m) bedeutet: x−y ist durch m teilbar.
+
+---
+
+## 16. 等价关系 / Aequivalenzrelationen
+
+**Eine Aequivalenzrelation ist eine reflexive, symmetrische und transitive Relation.**
+  等价关系 = 自反 + 对称 + 传递。
+
+  **Reflexiv:** ∀a in A (aRa)
+  **Symmetrisch:** ∀a,b in A (aRb → bRa)
+  **Transitiv:** ∀a,b,c in A (aRb ∧ bRc → aRc)
+
+**Beispiele / 例:**
+  - n ~ m :⇔ n−m teilbar durch 2 (或任意 k in N) — 同余关系
+  - n ~ m :⇔ (n>0∧m>0)∨(n=m=0)∨(n<0∧m<0) — "gleiches Vorzeichen" (同符号)
+  - Gleichheit (=) als "feinste"; Allrelation als "groebste" Aequivalenzrelation
+
+**Aequivalenzklasse / 等价类:**
+  [a] := {b in X | b ~ a} = [a]~
+  Alle Elemente aus X, die zu a aequivalent sind.
+
+**Quotientenmenge / 商集:**
+  X/~ := {[a] | a in X} — die Menge aller Aequivalenzklassen.
+
+**Bedeutung fuer Automaten:**
+  Zwei DEA, die die gleiche Sprache akzeptieren, sind aequivalent (A1~A2).
+  Oft interessiert uns der "kleinere" (minimierte) Automat.
+
+---
+
+## 17. DEA 最小化 / Minimierung
+
+**Ziel:** Finde aequivalenten DEA mit minimaler Zustandsanzahl.
+
+**方法一 — 分组法 / Grobverfahren:**
+  1. Zustandsgruppen bilden: NEZ (Nicht-Endzustaende) und EZ (Endzustaende)
+  2. Bei Inkonsistenzen aufteilen: wenn Zustaende derselben Gruppe bei gleicher Eingabe
+     in verschiedene Gruppen gehen → trennen
+  3. Wiederholen bis keine Inkonsistenzen mehr
+  4. Verschmelzen (合并) der Zustaende, die noch in derselben Gruppe liegen → Minimalautomat
+
+**方法二 — 表填充法 / Table-Filling-Algorithmus:**
+  1. Erstelle eine Tabelle aller Zustandspaare (s,s') mit s!=s'
+  2. Markiere alle Paare mit s in F und s' nicht in F (oder umgekehrt)
+  3. Wiederhole: Fuer jedes unmarkierte Paar (s,s') und jedes e in E:
+     Wenn (δ(s,e), δ(s',e)) schon markiert ist → markiere (s,s')
+  4. Verschmelze unmarkierte Zustandspaare → Minimalautomat
+
+**Beispiel (Passwort-Erkennung mit Gross-/Kleinbuchstaben):**
+  Ursprünglicher Automat s0...s4 → minimiert zu s0, s1, s2, s34
+
+**Beispiel (Sprache "enthaelt 00"):**
+  Zustaende z0,z1,z2,z3 (NEZ) und z4 (EZ)
+  → NEZ aufgeteilt in {z0,z2} und {z1,z3}
+  → Minimalautomat: z02, z13, z4
+
+---
+
+## 18. 带输出的有限自动机 / Endliche Automaten mit Ausgabe
+
+**Grundidee:**
+  EA mit getrenntem Ausgabeband (beschreibbar, aber nicht lesbar).
+  Jedes Eingabezeichen → ein Ausgabezeichen (ohne λ-Uebergaenge).
+
+**Definition: A = (E, A, S, δ, γ, s0)**
+  A = Ausgabealphabet (输出字母表)
+  γ = Ausgabefunktion (输出函数)
 
 **Mealy-Automat:**
-  输出依赖于当前状态和当前输入。
-  转移边上标有「输入/输出」。
-  同样可以实现在读到 011 时输出 1。
+  γ: S × E → A — Ausgabe haengt vom aktuellen Zustand **und** aktuellen Eingabezeichen ab.
+  Im Graph: an jeder Kante steht "e/a" (Eingabe/Ausgabe).
+  更 kompakt (紧凑), da fuer jede Kombination (s,e) ein Ausgabezeichen.
+
+**Moore-Automat:**
+  γ: S → A — Ausgabe haengt **nur** vom aktuellen Zustand ab.
+  Im Graph: Ausgabezeichen steht **unter** dem Zustand im Knoten.
+
+**Mealy ↔ Moore 等价:** Beide Modelle sind von ihrer Berechnungsmaechtigkeit her aequivalent.
+
+**Beispiele:**
+  - **Flip-Flop (Mealy)**: Zustaende Set/Reset, Eingabe 0/1, Ausgabe = neuer Zustandsindex
+  - **Fahrstuhl/Elevator (Moore)**: Zustaende z0(E), z1(1), z2(2) mit Etagenanzeige
+  - **Keksautomat (Mealy)**: Eingabe 1€/2€/Taste, Ausgabe 1€/2€/Keks/–, bei 2€ → Keks
 
 ---
 
-## 15. 自动机最小化 / Minimierung
+## 19. 非决定型图灵机 / Nichtdeterministische Turingmaschine (NTM)
 
-**目标:** 找到与给定 EA 等价但状态数最少的 EA。
+**Definition: δ: S × B → P(S × B × {R, L, N})**
+  δ bildet auf die **Potenzmenge** (幂集) ab.
+  Fuer (s,b) gibt es eine Menge moeglicher Uebergaenge {(s1,b1,X1), (s2,b2,X2), ...}.
+  **Jeder** dieser Uebergaenge kann genommen werden.
 
-**基本思路:**
-  1. 移除不可达状态
-  2. 合并等价状态（无法通过任何输入词区分出来的状态）
-  3. 使用表填充算法（Table-Filling-Algorithm）
+**Rechenbaum / 计算树:**
+  Nichtdeterminismus erzeugt einen Rechenbaum: C0 → mehrere C1 → mehrere C2 → ...
+  Es existiert ein akzeptierender Pfad → Eingabe wird akzeptiert.
 
-**等价关系 / Äquivalenzrelation:**
-  - 反射性、对称性、传递性
-  - n ∼ m ⇔ n−m 可被 k 整除（同余关系）
-  - A₁ ∼ A₂ ⇔ A₁ 和 A₂ 接受相同的语言
-
----
-
-## 16. 形式语法 / Formale Grammatik
-
-**Definition: G = (N, T, S, P)**
-
-| 符号 | 德语 | 中文 |
-|------|------|------|
-| **N** | Nichtterminale (Variablen) | 非终结符（变量，大写字母） |
-| **T** | Terminale | 终结符（小写字母，实际字符） |
-| **S** | Startsymbol | 起始符号（S ∈ N） |
-| **P** | Produktionen | 产生式规则集 |
-
-**Produktionen 产生式:**
-  形式：α → β（α 至少含一个非终结符，β 是任意串）
-  例：S → NP VP, NP → N, N → Hans
-
-**推导 / Ableitung:**
-  S → NP VP → N VP → Hans VP → Hans V NP → Hans sah NP → Hans sah Krokodil
-
-**为什么恰好需要一个起始符号?**
-  确保推导有明确的起点，否则无法确定从哪开始。
-
-**注意:** 产生式 A → aA 会导致无限长词的可能。
+**Beispiel: L = {ww | w in {0,1}*}**
+  Die Maschine **raet** nichtdeterministisch die Mitte, dann:
+  - Vergleichsphase: passende Zeichen paarweise suchen, markieren (z.B. mit X)
+  - Wenn alle Zeichen links und rechts markiert → akzeptieren
 
 ---
 
-## 17. 重要人物 / Protagonisten
+## 20. 非决定型下推自动机 / Nichtdeterministischer Kellerautomat (NKA)
 
-| 人物 | 贡献 |
-|------|------|
-| **Kurt Gödel** | 不完备定理 |
-| **Alan Turing** | 1936 年提出图灵机；判定问题 |
-| **Emil Post** | Post 对应问题 |
-| **John von Neumann** | 计算机体系结构 |
-| **Alonzo Church** | λ 演算；Church 论题 |
-| **Noam Chomsky** | 形式语言层级（Chomsky 层级） |
+**Definition: δ: S × (E∪{λ}) × K → P(S × K*)**
+  Wie deterministischer KA, aber δ liefert eine **Menge** von moeglichen Folgepaaren.
 
----
+**Variante 1:** δ(s,e,k) = {(s1,v1), (s2,v2), ...}
+  Eines der Paare (si,vi) wird gewaehlt: k loeschen, vi in Keller schreiben, zu si gehen.
 
-## 18. Church 论题 / Church'sche These
+**Variante 2:** δ(s,λ,k) = {(s1,v1), (s2,v2), ...}
+  Wie Variante 1, aber Eingabezeichen nicht beachtet, Lesekopf nicht bewegt.
+  **Wichtig:** λ-Uebergang darf jetzt auch definiert werden, wenn δ(s,e,k) ebenfalls definiert ist!
 
-**内容:** 所有直观上「可计算」的函数都可以被图灵机计算。
-  换句话说：图灵机精确地刻画了「可计算」的直觉概念。
-  （这不是数学定理，而是无法被证明的论题。）
+**Akzeptanz:** Es muss mindestens einen Rechenpfad geben, der nach vollstaendigem Lesen in F haelt.
 
----
+**Beispiel: L = {a^n b^n | n >= 0} mit NKA:**
+  两阶段策略 / Zwei-Phasen-Strategie:
+  - **Phase 1 (a-Phase):** Fuer jedes gelesene a wird A auf den Keller gelegt.
+  - **Phase 2 (b-Phase):** Fuer jedes gelesene b wird ein A aus dem Keller entfernt.
+  - Die Maschine **weiss nicht**, wann Phase 1 endet — sie **raet** den Umschaltpunkt **nichtdeterministisch**.
+  - Bei jedem a darf sie: in Phase 1 bleiben **oder** nichtdeterministisch in Phase 2 wechseln.
+  - Alle falschen Umschaltpunkte → Widersprueche im Keller → verwerfen.
+  - Genau ein richtiger Umschaltpunkt → Keller am Ende wieder nur k0 → Endzustand → akzeptieren.
 
-## 19. 可判定性 / Entscheidbarkeit
-
-**一个问题称为可判定的 (entscheidbar)，当存在一个图灵机，对每个输入都停机并给出正确回答（Ja/Nein）。**
-  关键：对**每个**输入都必须停机。
-
----
-
-## 20. 常见语言模式 / Häufige Sprachmuster
-
-| 语言 | 需要的最小自动机类型 |
-|------|---------------------|
-| 以某字符结尾的词 | EA (有限自动机) |
-| 包含特定子串的词 | EA |
-| aⁿbⁿ（n 个 a + n 个 b） | KA (下推自动机) 或更强 |
-| w = u$ũ（回文带分隔符） | KA |
-| aⁿbⁿcⁿ | TM / LBA |
-| (ab)ⁿ(ba)ⁿ | KA |
+**Konkretes Beispiel x=aabb:**
+  - Umschalten nach 1. a: Keller zu frueh leer → verwerfen
+  - Umschalten nach aa: Keller genau am Ende nur k0 → akzeptierend halten ✓
+  - Umschalten nach aab: b kommt aber Keller leer → verwerfen
 
 ---
 
-## 21. 考试重点速查 / Klausur-Checkliste
+## 21. 非决定型有限自动机 / Nichtdeterministischer Endlicher Automat (NEA)
 
-- [x] Alphabet, Wort, λ, A*, Sprache 的定义
-- [x] TM 五元组 (E, B, S, δ, s₀) 和 Turingtafel
-- [x] Akzeptor-TM: F 集合，akzeptieren vs. entscheiden
-- [x] Konfiguration (v, s, w) 和转移关系 ⊢
-- [x] LBA: k·|w|+c 空间限制
-- [x] KA 定义：E, K, S, δ, s₀, F + LIFO
-- [x] λ-Übergang 的含义和优势
-- [x] KA 的转移书写：δ(s, e, k) = (s', v)
-- [x] EA 定义和图形表示
-- [x] Moore vs Mealy
-- [x] EA 最小化
-- [x] 语法 G = (N, T, S, P) 和推导
-- [x] Church 论题和可判定性
-- [x] 判定问题 → 语言，计算问题 → 函数
+**Definition: δ: S × E → P(S) — δ(s,e) = {s1, s2, ...}**
+  Vom Zustand s beim Lesen von e kann in **einen der Zustaende** aus der Potenzmenge gewechselt werden.
+  Die Menge darf auch **leer** sein → Automat kann halten, bevor die Eingabe abgearbeitet wurde.
+
+**Akzeptanz / 接受:**
+  Es existiert eine Kantenfolge im Graphen, die nach Abarbeiten der **ganzen** Eingabe
+  zu einem Endzustand fuehrt.
+  **λ-Beschriftungen (ε-Uebergaenge):** tragen kein Zeichen zum gelesenen Wort bei.
+
+**NEA → DEA:** Jeder NEA kann in einen aequivalenten DEA ueberfuehrt werden (Potenzmengenkonstruktion / 幂集构造法).
+
+**Interpretation des Nichtdeterminismus:**
+  a) Der Automat "entscheidet" selbst, welchen Weg er geht.
+  b) Kopien des Automaten waehlen jeweils einen anderen Folgezustand.
 
 ---
 
-*Erstellt am 18.05.2026 — Letzter Versuch, viel Erfolg! 🍀*
-*创建于 2026年5月18日 — 最后一次机会，祝顺利！*
+## 22. 德语语法基础 / Deutsche Grammatik (Grundlagen)
+
+**Ein Satz besteht aus: Subjekt + Praedikat + Objekt**
+  句子 = 主语 + 谓语 + 宾语
+
+**Subjekt (主语):** Wer? Was? (tut etwas)
+**Praedikat (谓语):** Was tut das Subjekt? → Verb (Taetigkeitswort / 动词)
+**Objekt (宾语):**
+  - Akkusativ: Wen? Was? (直接宾语)
+  - Dativ: Wem? (间接宾语)
+  - Genitiv: Wessen? (属格宾语)
+
+**Praeposition (介词):**
+  Setzen sprachliche Ausdruecke in eine inhaltliche Beziehung.
+  例: ueber, fuer, wegen, im, an
+
+**Beispiele:**
+  "Luke Skywalker toetet Feinde." → Subjekt Praedikat Akkusativ-Objekt
+  "Jana schenkt Jan Blumen." → Jan = Dativ-Objekt
+  "Sie hat ihn des Diebstahls beschuldigt." → ihn=Akkusativ, des Diebstahls=Genitiv
+
+---
+
+## 23. 语法短语类型 / Phrasentypen
+
+**Nominalphrase (NP):**
+  Eine Phrase, deren Kern ein Nomen (Substantiv) ist.
+  例: [Wichtige Entscheidungen]NP, [eine wichtige Entscheidung]NP, [der Burg]NP
+
+**Verbalphrase (VP):**
+  Eine Phrase, deren Kern ein Verb ist. Enthaelt auch Ergaenzungen des Verbs.
+  例: [schlaeft]VP, [das Licht zu loeschen]VP
+
+**Praepositionalphrase (PP):**
+  Phrasen mit einer Praeposition als Kern.
+  例: [mit grossem Aufwand]PP, [auf dem Baum]PP
+
+---
+
+## 24. 形式语法 / Formale Grammatik
+
+**G = (N, T, P, S) — ein Quadrupel / 四元组**
+
+| 符号 | Bedeutung / 含义 |
+|------|-----------------|
+| **N** | Nichtterminale (Variablen) — 非终结符（大写字母） |
+| **T** | Terminale — 终结符（小写字母，实际字符） |
+| **P** | Produktionen (Regeln) — 产生式规则集 |
+| **S** | Startsymbol — 起始符号 (S in N) |
+
+**条件:**
+  - N ∩ T = ∅ (N 和 T 不相交)
+  - S in N
+  - Produktion α → β: α in (N∪T)* \ T* (α 至少含一个非终结符), β in (N∪T)*
+  - | (竖线) = Metazeichen (元符号), 表示"或"
+
+**Warum α nicht rein aus T?** Terminalsymbole sollen beenden! 否则可能无法继续推导。
+
+**Beispiel: Deutsche Grammatik-Regeln:**
+  NP → N | A N | NP PP
+  VP → V | V NP | VP NP
+  PP → P P | P NP
+  Lexikon: A → der | die | das | dem | ein | einem
+  P → mit | in
+  N → Hans | Krokodil | Auto | Fernglas
+  V → sah
+
+---
+
+## 25. 推导与语法语言 / Ableitung und Sprache einer Grammatik
+
+**Ableitungsschritt / 一步推导:**
+  γαφ ⇒ γβφ genau dann, wenn (α,β) in P. 记作 γαφ ⇒1 γβφ.
+
+**Mehrschrittige Ableitung / 多步推导:**
+  α1 ⇒ αn bedeutet: α1 ⇒1 α2 ⇒1 ... ⇒1 αn
+  α1 ⇒G αn — deutlich machen, dass G verwendet wird.
+
+**Sprache einer Grammatik / 语法的语言:**
+  L(G) = {w in T* | S ⇒G w}
+  Eine Ableitung endet, wenn nur noch Terminalsymbole auftauchen.
+
+**Beispiel: "Hans sah das Krokodil mit einem Fernglas"**
+  S ⇒ NP VP ⇒ N VP PP ⇒ Hans V NP P NP
+  ⇒ Hans sah A N mit A N
+  ⇒ Hans sah das Krokodil mit einem Fernglas
+
+**Syntaxbaum / 语法树:**
+  Jede Verzweigung entspricht der Anwendung einer Regel.
+  Zwei verschiedene Syntaxbaeume → strukturelle Ambiguitaet (结构歧义):
+  "Hans sah das Krokodil mit einem Fernglas" — hat Hans oder das Krokodil das Fernglas?
+
+---
+
+## 26. 乔姆斯基层级 / Chomsky-Hierarchie
+
+| Typ | Name / 名称 | Einschraenkung / 限制 | Automat / 对应自动机 |
+|-----|------------|----------------------|---------------------|
+| **Typ 0** | Unbeschraenkt / 无限制 | Keine Einschraenkungen | TM |
+| **Typ 1** | Kontextsensitiv / 上下文相关 | |α| ≤ |β| (nicht verkuerzend) | LBA |
+| **Typ 2** | Kontextfrei / 上下文无关 | Linke Seite = einzelne Variable | KA |
+| **Typ 3** | Regulaer / 正则 | Links einzeln; rechts = Terminal ODER Terminal+Variable | EA/DEA |
+
+**Hierarchie / 层级包含:**
+  Typ 3 ⊂ Typ 2 ⊂ Typ 1 ⊂ Typ 0 (每个下级自动是上级的子集)
+
+---
+
+## 27. 各类型详解 / Typen im Detail
+
+**Typ 0:** Jede Grammatik ist zunaechst vom Typ 0. Keine Einschraenkungen.
+
+**Typ 1 (kontextsensitiv):**
+  Jede Regel w1→w2 muss |w1| ≤ |w2| erfuellen (Laenge nimmt nicht ab).
+  Warum "kontextsensitiv"? 例: aC → aDb
+  C darf nur dann durch Db ersetzt werden, wenn es im Kontext "a_" auftritt.
+  αVβ → αγβ (mit |γ|≥1): V steht im Kontext von α und β.
+
+**Typ 2 (kontextfrei):**
+  Der Kontext faellt weg — linke Seite muss eine einzelne Variable sein. 例: C → aDb ✓
+
+**Typ 3 (regulaer):**
+  Linke Seite: einzelne Variable.
+  Rechte Seite: **nur** ein Terminal ODER ein Terminal gefolgt von einer Variable.
+  允许: S → aA ✓, S → a ✓
+  不允许: S → Aa ✗, S → aaA ✗
+  → 被称为 rechtslinear (右线性)。
+
+**λ-Sonderregeln:** Je nach Konvention gibt es Sonderregeln fuer das leere Wort λ.
+
+---
+
+## 28. 语法实例 / Grammatik-Beispiele
+
+**例1 (Typ 3 — regulaer):**
+  L1 = {w in {a,b}* | in w kommt aa vor} (包含子串 aa)
+  Grammatik: S → bS | aA, A → bS | aB | a, B → bB | aB | b | a
+  Ableitung: S ⇒ aA ⇒ abS ⇒ abaA ⇒ abaaB ⇒ abaabB ⇒ abaaba
+
+**例2 (Typ 2 — kontextfrei):**
+  L2 = {a^n b^n | n >= 1}
+  Grammatik: S → aSb | ab
+
+**例3 (Typ 1 — kontextsensitiv):**
+  L3 = {a^n b^n c^n | n >= 1}
+  Grammatik: S → aSBC | aBC, CB → BC, aB → ab, bB → bb, bC → bc, cC → cc
+  （CB → BC是重排规则）
+
+---
+
+## 29. 自动机与语法对应 / Automat ↔ Grammatik
+
+**Chomsky-Typ und zugehoeriger Automat:**
+  Typ 0 ↔ TM
+  Typ 1 ↔ LBA
+  Typ 2 ↔ KA
+  Typ 3 ↔ EA
+
+**DEA → Typ 3 Grammatik / 转换规则:**
+  - N = S (Nichtterminale = Zustaende)
+  - T = E (Terminale = Eingabealphabet)
+  - S = s0 (Startsymbol = Startzustand)
+  - δ(s, e) = s' ⇒ Produktion s → e s'
+  - s in F ⇒ Produktion s → λ
+  - Zustaende ohne definierten Uebergang → sFehler mit Selbstschleifen
+
+**Beispiel / 例 (aus Vorlesung Folie 255-256):**
+  A: s0 --b--> s1, s0 --a--> s0; s1 --a--> sFehler, s1 --b--> s1; F={s1}
+  → G: s0 → a s0 | b s1; s1 → a sFehler | b s1 | λ; sFehler → a sFehler | b sFehler
+  Es liegt eine Grammatik vom Typ 3 vor.
+
+**Bedeutung / 意义:**
+  Automat: Berechnung endet, wenn gesamte Eingabe gelesen wurde.
+  Grammatik: Wortproduktion endet, wenn das letzte Nichtterminal entfernt wurde (→ λ-Produktion).
+
+---
+
+## 30. 重要人物 / Protagonisten
+
+| 人物 / Person | 贡献 / Beitrag |
+|---------------|---------------|
+| **Kurt Goedel** | Unvollstaendigkeitssaetze / 不完备定理 |
+| **Alan Turing** | 1936: Turingmaschine; Entscheidungsproblem |
+| **Emil Post** | Postsches Korrespondenzproblem |
+| **John von Neumann** | Computer-Architektur (Von-Neumann-Architektur) |
+| **Alonzo Church** | λ-Kalkuel; Church'sche These |
+| **Noam Chomsky** | Chomsky-Hierarchie der formalen Sprachen |
+
+---
+
+## 31. Church 论题 / Church'sche These
+
+**Inhalt / 内容:**
+  Alle intuitiv "berechenbaren" Funktionen koennen durch eine Turingmaschine berechnet werden.
+  所有直观上"可计算"的函数都可以被图灵机计算。
+
+  Dies ist **kein mathematischer Satz** — die These kann nicht bewiesen werden, da der Begriff
+  "intuitiv berechenbar" nicht formal definiert ist. Sie ist aber allgemein akzeptiert.
+
+---
+
+## 32. 可判定性 / Entscheidbarkeit
+
+**Definition / 定义:**
+  Ein Problem heisst **entscheidbar**, wenn es eine Turingmaschine gibt, die fuer **jede** Eingabe
+  haelt und die korrekte Antwort (Ja/Nein) liefert.
+  一个问题可判定：存在一个 TM，对**每个**输入都停机并给出正确回答。
+
+---
+
+## 33. 常见语言模式与对应自动机 / Haeufige Sprachmuster
+
+| 语言 / Sprache | 最小自动机 / Minimaler Automat | Chomsky-Typ |
+|---------------|------------------------------|-------------|
+| Woerter, die mit bestimmtem Zeichen enden | EA (DEA) | Typ 3 |
+| Woerter, die bestimmtes Teilwort enthalten | EA (DEA) | Typ 3 |
+| a^n b^n (gleich viele a und b, sortiert) | KA | Typ 2 |
+| w = u$~u (Palindrome mit Trenner) | KA | Typ 2 |
+| a^n b^n c^n (drei gleiche Anzahlen) | TM / LBA | Typ 1 |
+| ww (Wort doppelt) | NTM | Typ 0 |
+| (ab)^n (ba)^n | KA | Typ 2 |
+| Geklammerte Ausdruecke / 括号匹配 | KA | Typ 2 |
+
+---
+
+## 34. 考试重点速查 / Klausur-Checkliste
+
+- [ ] Alphabet, Wort, λ, A*, A+, Sprache, {λ} vs ∅ 的定义与区别
+- [ ] TM 五元组 (E,B,S,δ,s0)；Turingtafel/Zustandsuebergangstabelle
+- [ ] δ(s,b)=(s',b',X) 的精确语义 (R/L/N三种移动)
+- [ ] Akzeptor-TM: F 集合；akzeptieren vs. entscheiden 的关键区别
+- [ ] 数字集→形式语言：选择编码 (Dezimal/Binaer/einstellig)
+- [ ] Konfiguration (v,s,w)：三要素、起始配置、vw=带内容
+- [ ] Uebergangsrelation |-：N/R/L 三种情况的精确定义
+- [ ] LBA: k·|w|+c；$L/$R 边界；k,c 固定不依赖输入
+- [ ] KA: E,K,S,δ,s0,F；LIFO-Prinzip
+- [ ] KA δ: S×(E∪{λ})×K → S×K*；Variante 1 vs Variante 2 (λ-Uebergang)
+- [ ] λ-Uebergang 的条件和优势；决定型中不可与普通转移共存
+- [ ] KA 格局 (s,w,v)；|-A 转移关系；栈操作
+- [ ] DEA: (E,S,δ,s0,F)；δ 为 totale Funktion；图形表示
+- [ ] DEA 接受：δ(...δ(δ(s0,a1),a2)...,an) in F
+- [ ] Aequivalenzrelation: reflexiv+symmetrisch+transitiv；[a]；X/~
+- [ ] DEA Minimierung: 分组法 + Table-Filling (表填充法)
+- [ ] Moore γ:S→A vs Mealy γ:S×E→A；图形标记方式；互转等价性
+- [ ] Flip-Flop (Mealy)；Fahrstuhl (Moore)；Keksautomat (Mealy)
+- [ ] NTM: δ→P(S×B×{R,L,N})；Rechenbaum；存在接受路径即接受
+- [ ] NKA: δ→P(S×K*)；λ-Uebergang可与普通转移共存
+- [ ] NKA a^n b^n: 两阶段非决定猜切换点
+- [ ] NEA: δ→P(S)；ε-Uebergaenge；NEA→DEA (Potenzmengenkonstruktion)
+- [ ] 德语语法: Subjekt, Praedikat, Objekt, Praeposition, NP, VP, PP
+- [ ] 形式语法 G=(N,T,P,S)；N∩T=∅；α in (N∪T)*\T*
+- [ ] 推导 ⇒1, ⇒, ⇒G；L(G)={w in T*|S⇒G w}
+- [ ] Chomsky-Hierarchie Typ 0–3: 限制条件 + 对应自动机 + 向下兼容
+- [ ] Typ 1 为什么叫"上下文相关": aC→aDb；αVβ→αγβ
+- [ ] Typ 3: 右侧 = Terminal 或 Terminal+Variable (rechtslinear)
+- [ ] DEA → Typ 3 语法: s→e s' 和 s→λ
+- [ ] Church'sche These: intuitiv berechenbar = TM-berechenbar
+- [ ] Entscheidbarkeit: TM haelt fuer **alle** Eingaben
+
+---
+
+*Erstellt am 19.05.2026 — Letzter Versuch, viel Erfolg! 🍀*
+*创建于 2026年5月19日 — 最后一次考试机会，祝顺利通过！*
